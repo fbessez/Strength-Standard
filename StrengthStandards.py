@@ -176,7 +176,11 @@ def class_finder(exercise, gender, user_weight, user_one_rep_max, metric="lb"):
             print(*acceptable_exercises, sep="\n")
             return
 
-
+# INPUT1: user_weight: integer
+# INPUT2: one_rep_max: integer --> the max weight that user can perform one rep
+# OUTPUT: weight_bw_ratio : float --> the ratio of weight lifted to body weight
+def weight_bw_ratio(user_weight, user_one_rep_max):
+    return user_one_rep_max / user_weight
 
 # An example of what p.tables would look like
 # x = [[['BW', 'Beg.', 'Nov.', 'Int.', 'Adv.', 'Elite'], 
