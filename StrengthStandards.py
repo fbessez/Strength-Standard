@@ -145,8 +145,11 @@ def find_match(master_table, gender, user_weight, one_rep_max):
             weights.append(rep_weight)
             break
         weights.append(rep_weight)
-    XP_level = master_table[gender][0][len(weights) - 1]
-    return [XP_level, weights[-1]]
+    x = {"curr_lvl": master_table[gender][0][len(weights) - 1],
+            "next_lvl": master_table[gender][0][len(weights)],
+            "goal": weights[-1]}
+    print(weights)
+    return x
 
 # INPUT1: exercise : string --> see the global acceptable_exercises list
 # INPUT2: gender: integer --> 0 for male and 1 for female
@@ -158,12 +161,22 @@ def class_finder(exercise, gender, user_weight, user_one_rep_max, metric="lb"):
     target = get_target(exercise, metric)
     try: 
         table = get_html_table(target)
-        XP_and_GOAL = find_match(table, gender, user_weight, user_one_rep_max)
-        result = "You are currently %s at %s. The next class will be achieved at a one rep max of %i %s" % (XP_conversion[XP_and_GOAL[0]], exercise, XP_and_GOAL[1], metric)
-        return result
-    except:
-        print("Here's a list of all the approved exercises: %s" % acceptable_exercises)
+        response_dict = find_match(table, gender, user_weight, user_one_rep_max)
+        if "sorry" not in response_dict:
+            print("You are currently %s at %s" % (XP_conversion[response_dict["curr_lvl"]], exercise))
+            print("To become %s, you need to hit a one rep max of %i %s" % (XP_conversion[response_dict["next_lvl"]], response_dict["goal"], metric))
         return
+    except:
+        if user_weight > 310 and gender == 0: 
+            return "Sorry, we don't have data for your weight class. Max is 310 lbs."
+        elif user_weight > 260 and gender == 1: 
+            return "Sorry, we don't have data for your weight class. Max is 260 lbs."
+        else:
+            print("Here's a list of all the approved exercises:")
+            print(*acceptable_exercises, sep="\n")
+            return
+
+
 
 # An example of what p.tables would look like
 # x = [[['BW', 'Beg.', 'Nov.', 'Int.', 'Adv.', 'Elite'], 
