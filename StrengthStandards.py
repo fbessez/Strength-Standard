@@ -185,6 +185,9 @@ def weight_bw_ratio(user_weight, user_one_rep_max):
 
 if __name__ == "__main__":
     exercise = input('What exercise are you checking for? ')
+    if exercise not in acceptable_exercises:
+        print("That exercise does not exist. Next time choose one of the following: ", acceptable_exercises)
+        exit(0)
     one_rep_max = int(input("What is your one rep max for %s? " % exercise))
     body_weight = int(input("What is your current body weight? "))
     metric = input("What is your desired weight metric? (lb/kg) ")
