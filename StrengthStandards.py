@@ -80,17 +80,17 @@ class HTMLTableParser(HTMLParser):
 base_url = "http://strengthlevel.com/strength-standards/"
 
 acceptable_exercises = [
-	"bench press", "deadlift", "squat", "shoulder press",
-	"pull ups", "barbell curl", "dips", "front squat", 
-	"bent over row", "power clean", "clean", "push press",
-	"clean and jerk", "snatch", "clean and press"]
+    "bench press", "deadlift", "squat", "shoulder press",
+    "pull ups", "barbell curl", "dips", "front squat", 
+    "bent over row", "power clean", "clean", "push press",
+    "clean and jerk", "snatch", "clean and press"]
 
 XP_conversion = {
-	"Beg.": "Beginner",
-	"Nov.": "Novice",
-	"Int.": "Intermediate",
-	"Adv.": "Advanced",
-	"Elite": "Elite"
+    "Beg.": "Beginner",
+    "Nov.": "Novice",
+    "Int.": "Intermediate",
+    "Adv.": "Advanced",
+    "Elite": "Elite"
     }
 
 
@@ -99,14 +99,15 @@ XP_conversion = {
 # OUTPUT: target : string --> represents the target URL to scrape
 # Notes: Simple function that forms the correct endpoint
 def get_target(exercise, metric):
-	if exercise in acceptable_exercises:
-		exercise = re.sub(r"\s+", '-', exercise)
-		global base_url
-		target = base_url + exercise + "/" + metric
-		return target
-	else:
-		print("Data on", exercise, "is not available :(")
-		return 
+    if exercise in acceptable_exercises:
+        exercise = re.sub(r"\s+", '-', exercise)
+        global base_url
+        target = base_url + exercise + "/" + metric
+        return target
+    else:
+        print("Data on", exercise, "is not available :(")
+        print("Choose one of the following:", acceptable_exercises)
+        return 
 
 # INPUT1: target: string --> the target URL
 # OUTPUT: p.tables : list of lists --> the list representation of the chart on 
@@ -114,18 +115,18 @@ def get_target(exercise, metric):
 # Notes: Makes use of urllib to scrape the html as well as HTMLTableParser to 
 #        convert the table into list format
 def get_html_table(target): 
-	try:
-		req = urllib.request.Request(target)
-		f = urllib.request.urlopen(req)
-		xhtml = f.read().decode("utf-8")
-		p = HTMLTableParser()
-		p.feed(xhtml)
-		return p.tables
+    try:
+        req = urllib.request.Request(target)
+        f = urllib.request.urlopen(req)
+        xhtml = f.read().decode("utf-8")
+        p = HTMLTableParser()
+        p.feed(xhtml)
+        return p.tables
         # x = p.tables[0] # Man
         # y = p.tables[1] # Woman
-	except: 
-		print("Data on", exercise, "is not available :(")
-		return
+    except: 
+        print("Data on", exercise, "is not available :(")
+        return
 
 # INPUT1: master_table : list of lists --> the p.tables that was returned
 # INPUT2: gender: integer --> 0 for male and 1 for female
@@ -182,44 +183,18 @@ def class_finder(exercise, gender, user_weight, user_one_rep_max, metric="lb"):
 def weight_bw_ratio(user_weight, user_one_rep_max):
     return user_one_rep_max / user_weight
 
-# An example of what p.tables would look like
-# x = [[['BW', 'Beg.', 'Nov.', 'Int.', 'Adv.', 'Elite'], 
-# 	  ['120', '67 x0.56', '101 x0.84', '143 x1.19', '193 x1.61', '247 x2.06'], 
-# 	  ['130', '77 x0.59', '112 x0.87', '157 x1.21', '209 x1.61', '265 x2.04'], 
-# 	  ['140', '86 x0.62', '124 x0.89', '171 x1.22', '225 x1.6', '283 x2.02'], 
-# 	  ['150', '96 x0.64', '135 x0.9', '184 x1.22', '240 x1.6', '300 x2'], 
-# 	  ['160', '105 x0.66', '146 x0.91', '196 x1.23', '254 x1.59', '316 x1.97'], 
-# 	  ['170', '114 x0.67', '157 x0.92', '209 x1.23', '268 x1.58', '332 x1.95'], 
-# 	  ['180', '123 x0.68', '167 x0.93', '221 x1.23', '282 x1.56', '347 x1.93'], 
-# 	  ['190', '132 x0.69', '177 x0.93', '232 x1.22', '295 x1.55', '361 x1.9'], 
-# 	  ['200', '140 x0.7', '187 x0.94', '244 x1.22', '307 x1.54', '375 x1.88'], 
-# 	  ['210', '149 x0.71', '197 x0.94', '255 x1.21', '320 x1.52', '389 x1.85'], 
-# 	  ['220', '157 x0.71', '206 x0.94', '265 x1.21', '332 x1.51', '402 x1.83'], 
-# 	  ['230', '165 x0.72', '216 x0.94', '276 x1.2', '343 x1.49', '415 x1.8'], 
-# 	  ['240', '173 x0.72', '225 x0.94', '286 x1.19', '355 x1.48', '427 x1.78'], 
-# 	  ['250', '181 x0.72', '233 x0.93', '296 x1.18', '366 x1.46', '439 x1.76'], 
-# 	  ['260', '188 x0.72', '242 x0.93', '306 x1.18', '377 x1.45', '451 x1.74'], 
-# 	  ['270', '196 x0.72', '250 x0.93', '315 x1.17', '387 x1.43', '463 x1.71'], 
-# 	  ['280', '203 x0.73', '259 x0.92', '324 x1.16', '397 x1.42', '474 x1.69'], 
-# 	  ['290', '210 x0.72', '267 x0.92', '333 x1.15', '407 x1.41', '485 x1.67'], 
-# 	  ['300', '217 x0.72', '275 x0.92', '342 x1.14', '417 x1.39', '496 x1.65'], 
-# 	  ['310', '224 x0.72', '283 x0.91', '351 x1.13', '427 x1.38', '506 x1.63']], 
-# 	 [['BW', 'Beg.', 'Nov.', 'Int.', 'Adv.', 'Elite'], 
-# 	  ['100', '23 x0.23', '46 x0.46', '79 x0.79', '120 x1.2', '168 x1.68'], 
-# 	  ['110', '27 x0.24', '51 x0.47', '86 x0.78', '129 x1.17', '178 x1.62'], 
-# 	  ['120', '31 x0.25', '57 x0.47', '92 x0.77', '137 x1.14', '188 x1.56'], 
-# 	  ['130', '34 x0.26', '62 x0.47', '99 x0.76', '145 x1.11', '197 x1.51'], 
-# 	  ['140', '38 x0.27', '66 x0.47', '105 x0.75', '152 x1.08', '205 x1.46'], 
-# 	  ['150', '41 x0.28', '71 x0.47', '110 x0.74', '159 x1.06', '213 x1.42'], 
-# 	  ['160', '45 x0.28', '75 x0.47', '116 x0.72', '165 x1.03', '221 x1.38'], 
-# 	  ['170', '48 x0.28', '80 x0.47', '121 x0.71', '172 x1.01', '228 x1.34'], 
-# 	  ['180', '51 x0.28', '84 x0.47', '126 x0.7', '178 x0.99', '235 x1.3'], 
-# 	  ['190', '54 x0.29', '88 x0.46', '131 x0.69', '184 x0.97', '242 x1.27'], 
-# 	  ['200', '57 x0.29', '92 x0.46', '136 x0.68', '189 x0.95', '248 x1.24'], 
-# 	  ['210', '60 x0.29', '95 x0.45', '141 x0.67', '195 x0.93', '254 x1.21'], 
-# 	  ['220', '63 x0.29', '99 x0.45', '145 x0.66', '200 x0.91', '260 x1.18'], 
-# 	  ['230', '66 x0.29', '103 x0.45', '149 x0.65', '205 x0.89', '266 x1.16'], 
-# 	  ['240', '69 x0.29', '106 x0.44', '154 x0.64', '210 x0.87', '272 x1.13'], 
-# 	  ['250', '72 x0.29', '110 x0.44', '158 x0.63', '215 x0.86', '277 x1.11'], 
-# 	  ['260', '74 x0.29', '113 x0.43', '162 x0.62', '219 x0.84', '282 x1.09']]]
+if __name__ == "__main__":
+    exercise = input('What exercise are you checking for? ')
+    one_rep_max = int(input("What is your one rep max for %s? " % exercise))
+    body_weight = int(input("What is your current body weight? "))
+    metric = input("What is your desired weight metric? (lb/kg) ")
+    gender = int(input("What is your gender? 0 for Male, 1 for Female "))
+    htmlTable = get_html_table(get_target(exercise, metric))
+    match = find_match(htmlTable, gender, body_weight, one_rep_max)
+    print(match)
+
+
+
+
+
 
